@@ -1,19 +1,19 @@
 services:
     # PHP service
-    app:
-        build: ./app/
-        container_name: simple_nginx_php_mysql_app
+    restapi:
+        build: ./restapi/
+        container_name: simple_rest_api
         working_dir: /var/www/
         volumes:
-            - ./app:/var/www
-            - ./app/conf/php/php.ini:/usr/local/etc/php/php.ini
+            - ./restapi:/var/www
+            - ./conf/php/php.ini:/usr/local/etc/php/php.ini
         networks:
-            - simple-app-network
+            - simple-rest-api-network
 
     # MySQL database service
-    db:
+    restapidb:
         image: mysql:latest
-        container_name: simple_mysql
+        container_name: simple_rest_api_mysql
         ports:
             - "3306:3306"
         environment:
@@ -22,24 +22,24 @@ services:
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
         volumes:
-            - ./app:/var/www
+            - ./restapi:/var/www
         env_file:
             - .env
         networks:
-            - simple-app-network
+            - simple-rest-api-network
 
     # Nginx service
     nginx:
         image: nginx:alpine
-        container_name: simple_nginx
+        container_name: simple_rest_api_nginx
         ports:
             - 80:80
         volumes:
-            - ./app:/var/www
-            - ./app/conf/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./restapi:/var/www
+            - ./conf/nginx/conf.d/:/etc/nginx/conf.d/
         networks:
-            - simple-app-network
+            - simple-rest-api-network
             
 networks:
-    simple-app-network:
+    simple-rest-api-network:
         driver: bridge
