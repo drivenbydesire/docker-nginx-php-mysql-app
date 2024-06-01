@@ -1,12 +1,12 @@
 services:
     # PHP service
     app:
-        build: ./app/
+        build: ./${APP_NAME}/
         container_name: simple_nginx_php_mysql_app
-        working_dir: /var/www/
+        working_dir: /var/www/${APP_NAME}
         volumes:
-            - ./app:/var/www
-            - ./app/conf/php/php.ini:/usr/local/etc/php/php.ini
+            - ./${APP_NAME}:/var/www/${APP_NAME}
+            - ./${APP_NAME}/conf/php/php.ini:/usr/local/etc/php/php.ini
         networks:
             - simple-app-network
 
@@ -22,7 +22,7 @@ services:
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
         volumes:
-            - ./app:/var/www
+            - ./${APP_NAME}:/var/www/${APP_NAME}
         env_file:
             - .env
         networks:
@@ -35,8 +35,8 @@ services:
         ports:
             - 80:80
         volumes:
-            - ./app:/var/www
-            - ./app/conf/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./${APP_NAME}:/var/www/${APP_NAME}
+            - ./${APP_NAME}/conf/nginx/conf.d/:/etc/nginx/conf.d/
         networks:
             - simple-app-network
             
